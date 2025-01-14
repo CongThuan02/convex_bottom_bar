@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 /// Single convex button widget
 class ConvexButton extends StatelessWidget {
   static const _DEFAULT_SIZE = 60.0;
-  static const _DEFAULT_TOP = 50.0;
+  static const _DEFAULT_TOP = 20.0;
   static const _DEFAULT_SIGMA = 2.0;
   static const _DEFAULT_THICKNESS = 4.0;
 

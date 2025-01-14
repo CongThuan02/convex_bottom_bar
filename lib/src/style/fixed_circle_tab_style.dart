@@ -1,19 +1,3 @@
-/*
- *  Copyright 2020 Chaobin Wu <chaobinwu89@gmail.com>
- *  
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *  
- *      http://www.apache.org/licenses/LICENSE-2.0
- *  
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
 import 'package:flutter/material.dart';
 
 import '../item.dart';
@@ -39,54 +23,81 @@ class FixedCircleTabStyle extends InnerBuilder {
 
   @override
   Widget build(BuildContext context, int index, bool active) {
-    var c = active ? activeColor : color;
+    var c;  
+    if (index == convexIndex) {
+      c = active ? activeColor : color; // Màu cho icon giữa
+    } else {
+      c = active ? Colors.blue : color; // Màu riêng cho các icon khác
+    }
     var item = items[index];
     var style = ofStyle(context);
     var textStyle = style.textStyle(c, item.fontFamily);
-    var margin = style.activeIconMargin;
 
+    // Kiểm tra xem có phải là icon giữa không, nếu có thì tạo circle
     if (index == convexIndex) {
       final item = items[index];
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          // necessary otherwise the badge will not large enough
-          width: style.layoutSize,
-          height: style.layoutSize,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            // color: Colors.blue,
-            border: Border.all(color: Colors.blueAccent,width: 5)
-          ),
-          margin: EdgeInsets.all(margin),
+      return Container(
+        width: 220, // Tăng kích thước chiều rộng
+        height: 220, // Tăng kích thước chiều cao
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Color(0xffA9C0FF), width: 5),
+          color: Color(0xff006AF5),
+        ),
+        child: Center(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               BlendImageIcon(
                 active ? item.activeIcon ?? item.icon : item.icon,
-                size: style.activeIconSize,
+                size: 24, // Tăng kích thước biểu tượng
                 color: Colors.white,
               ),
-              Expanded(child: Text("Đăng tin",style: TextStyle(color: Colors.red),))
+              SizedBox(height: 0),
+              Text(
+                "Đăng tin",
+                style: TextStyle(color: Colors.white, fontSize: 12), // Tăng font chữ
+              ),
             ],
           ),
         ),
       );
     }
 
-    // var noLabel = style.hideEmptyLabel && hasNoText(item);
+    // Tạo các icon khác với gạch trên đầu khi chọn
     var icon = BlendImageIcon(
       active ? item.activeIcon ?? item.icon : item.icon,
       color: item.blend ? (c) : null,
       size: style.iconSize,
     );
-    var children = 
-         <Widget>[icon,Text("${item.title}" , style: textStyle)];
-       
+
+    var children = <Widget>[
+      icon,
+      Text(
+        "${item.title}",
+        style: textStyle,
+      ),
+    ];
+
+    // Tạo hiệu ứng gạch ở trên biểu tượng khi chọn
     return Container(
       padding: EdgeInsets.only(bottom: 2),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: children,
+        children: [
+    
+             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 2, // Độ dày của gạch
+                width: 20, // Chiều dài của gạch
+                color:active ==true? Colors.blue: Colors.white, // Màu gạch
+              ),
+            ),
+        
+            
+          ...children,
+        ],
       ),
     );
   }
